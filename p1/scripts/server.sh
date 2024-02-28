@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# Basic config
+# basic config
 sudo -i
 
 # k3s
 echo "[LOG] - Installing k3s"
+export K3S_KUBECONFIG_MODE="644"
 export INSTALL_K3S_EXEC="--server --cluster-init --bind-address=$1 --node-external-ip=$1 --flannel-iface=eth1"
 curl -sfL https://get.k3s.io | sh -
 
-# Share token
+# share token
 echo "[LOG] - Share token"
 TIMEOUT=60
 while [ ! -f /var/lib/rancher/k3s/server/node-token ]; do
@@ -26,6 +27,7 @@ echo "[LOG] - Alias for kubectl"
 echo "alias k=kubectl" >> /etc/bash.bashrc
 source /etc/bash.bashrc
 
-# root right for vagrant
-echo "[LOG] - Add root rights to vagrant user"
-echo "vagrant ALL=(ALL) NOPASSWD:ALL" >> "/etc/sudoers"
+# ifconfig
+echo "[LOG] - Update path for ifconfig"
+echo 'export PATH="/sbin:$PATH"' >> /etc/bash.bashrc
+source /etc/bash.bashrc

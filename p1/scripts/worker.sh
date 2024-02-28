@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Basic config
+# basic config
 sudo -i
 
-# Cheking token
+# cheking token
 echo "[LOG] - Checking for token file"
 if [ ! -f "/vagrant_shared/token" ]; then
     echo "Token file not found"
@@ -23,6 +23,7 @@ echo "[LOG] - Alias for kubectl"
 echo "alias k=kubectl" >> /etc/bash.bashrc
 source /etc/bash.bashrc
 
-# root right for vagrant
-echo "[LOG] - Add root rights to vagrant user"
-echo "vagrant ALL=(ALL) NOPASSWD:ALL" >> "/etc/sudoers"
+# ifconfig
+echo "[LOG] - Update path for ifconfig"
+echo 'export PATH="/sbin:$PATH"' >> /etc/bash.bashrc
+source /etc/bash.bashrc
