@@ -45,8 +45,15 @@ To explain quickly what happens in our script, the Vagrantfile create 2 vm with 
 ### P2
 
 Here we only need one vm, with k3s in server mode installed, the changes are inside the configuration file, so the server.sh script cause we need to add a lot of things to this master node server.
+The subjectss also talk about replicas which seems to be a similar word for "pods" in k3s, or at least it is pods replicas that we are talking about.
+We need to make 3 web app on this server, to make an app we need yaml files, a Deployment, and a Service. You can place them both in one file or in different files.
+
+- Deployments are made to create and initiate pods, replicas and their configurations.
+- Services are made to allow communication between those pods among the cluster. It can also be used to allow external communications but another tool is used for that.
+- Ingresses are this tool, they allow a way easier access management, routing, loadbalancer, and allow to have only one entrypoints even with multiple services which would be hard to handle if we had numerous apps. It is for this reason of "architecture logic" that I decided to separate the Ingress in a file apart from the 3 apps.
 
 ## Important doc
 
-[https://docs.k3s.io/quick-start]https://docs.k3s.io/quick-start
-[https://akos.ma/blog/vagrant-k3s-and-virtualbox/]https://akos.ma/blog/vagrant-k3s-and-virtualbox/
+[k3s offical doc]https://docs.k3s.io/quick-start
+[Vagrant file example]https://akos.ma/blog/vagrant-k3s-and-virtualbox/
+[What are Services and Deployments files]https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html#:~:text=A%20deployment%20is%20responsible%20for,and%20pods%20could%20be%20replicated.

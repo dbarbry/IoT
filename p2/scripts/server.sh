@@ -9,19 +9,6 @@ export K3S_KUBECONFIG_MODE="644"
 export INSTALL_K3S_EXEC="--server --cluster-init --bind-address=$1 --node-external-ip=$1 --flannel-iface=eth1"
 curl -sfL https://get.k3s.io | sh -
 
-# share token
-echo "[LOG] - Share token"
-TIMEOUT=60
-while [ ! -f /var/lib/rancher/k3s/server/node-token ]; do
-    sleep 1
-    TIMEOUT=$((TIMEOUT - 1))
-    if [ "$TIMEOUT" -eq 0 ]; then
-        echo "Token file not generated in 60sec"
-        exit 1
-    fi
-done
-cp /var/lib/rancher/k3s/server/node-token /vagrant_shared/token
-
 # alias k for kubectl
 echo "[LOG] - Alias for kubectl"
 echo "alias k=kubectl" >> /etc/bash.bashrc
@@ -31,3 +18,23 @@ source /etc/bash.bashrc
 echo "[LOG] - Update path for ifconfig"
 echo 'export PATH="/sbin:$PATH"' >> /etc/bash.bashrc
 source /etc/bash.bashrc
+
+# deployment part
+echo "[P1] - Initiating..."
+k apply -f /vagrant_shared/app1/deployment.yaml
+k apply -f /vagrant_shared/app1/service.yaml
+echo "[P1] - Done"
+
+echo "[P2] - Initiating..."
+k apply -f /vagrant_shared/app2/deployment.yaml
+k apply -f /vagrant_shared/app2/service.yaml
+echo "[P2] - Done"
+
+echo "[P3] - Initiating..."
+k apply -f /vagrant_shared/app3/deployment.yaml
+k apply -f /vagrant_shared/app3/service.yaml
+echo "[P3] - Done"
+
+echo "[Ingress] - Initiating..."
+k apply -f /vagrant_shared/ingress.yaml
+echo "[Ingress] - Done"
