@@ -54,6 +54,6 @@ We need to make 3 web app on this server, to make an app we need yaml files, a D
 
 ## Important doc
 
-[k3s offical doc]https://docs.k3s.io/quick-start
-[Vagrant file example]https://akos.ma/blog/vagrant-k3s-and-virtualbox/
-[What are Services and Deployments files]https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html#:~:text=A%20deployment%20is%20responsible%20for,and%20pods%20could%20be%20replicated.
+[k3s offical doc](https://docs.k3s.io/quick-start)
+[Vagrant file example](https://akos.ma/blog/vagrant-k3s-and-virtualbox/)
+[What are Services and Deployments files](https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html#:~:text=A%20deployment%20is%20responsible%20for,and%20pods%20could%20be%20replicated.)
