@@ -51,6 +51,9 @@ We need to make 3 web app on this server, to make an app we need yaml files, a D
 - Deployments are made to create and initiate pods, replicas and their configurations.
 - Services are made to allow communication between those pods among the cluster. It can also be used to allow external communications but another tool is used for that.
 - Ingresses are this tool, they allow a way easier access management, routing, loadbalancer, and allow to have only one entrypoints even with multiple services which would be hard to handle if we had numerous apps. It is for this reason of "architecture logic" that I decided to separate the Ingress in a file apart from the 3 apps.
+- ConfigMap, this one is a little dofferent, it is not a seperate file, but more a configuration shared by the deployment and the script to map the right html file for the right app, allowing us to host multiple web app, on a single IP address.
+
+Finally we have to apply each deployment and services files, along with the ingress, to lanch the 3 web-app, and everything is now working.
 
 ## Important doc
 
