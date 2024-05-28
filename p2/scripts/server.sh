@@ -2,6 +2,7 @@
 
 # basic config
 sudo -i
+sudo apt update -y
 
 # k3s
 echo "[LOG] - Installing k3s"

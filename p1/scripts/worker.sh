@@ -2,6 +2,8 @@
 
 # basic config
 sudo -i
+sudo apt update -y
+sudo apt upgrade -y
 
 # cheking token
 echo "[LOG] - Checking for token file"

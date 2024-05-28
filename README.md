@@ -62,3 +62,11 @@ Finally we have to apply each deployment and services files, along with the ingr
 [Vagrant file example](https://akos.ma/blog/vagrant-k3s-and-virtualbox/)
 
 [What are Services and Deployments files](https://matthewpalmer.net/kubernetes-app-developer/articles/service-kubernetes-example-tutorial.html#:~:text=A%20deployment%20is%20responsible%20for,and%20pods%20could%20be%20replicated.)
+
+[k3d official doc](https://k3d.io/v5.4.2/#quick-start)
+
+[ArgoCD official doc](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+
+[Setup k3d and ArgoCD](https://yashguptaa.medium.com/application-deploy-to-kubernetes-with-argo-cd-and-k3d-8e29cf4f83ee)
+
+[Install docker on debian](https://docs.docker.com/engine/install/debian/)
