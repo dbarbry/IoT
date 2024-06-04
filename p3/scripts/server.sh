@@ -10,7 +10,7 @@ if [ "$(id -u)" -ne 0 ] && [ -z "$SUDO_UID" ] && [ -z "$SUDO_USER" ]; then
 	printf "${RED}[LINUX]${NC} - Permission denied. Please run the command with sudo privileges.\n"
 	exit 87
 fi
-exit
+
 # basic config
 printf "${GREEN}[LINUX]${NC} - Getting updates...\n"
 sudo apt-get update > /dev/null
@@ -25,7 +25,7 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 echo \
 	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
 	$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-sudo tee /etc/apt/sources.list.d/docker.list
+	sudo tee /etc/apt/sources.list.d/docker.list
 sudo apt-get update > /dev/null
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null
@@ -44,18 +44,23 @@ source /etc/bash.bashrc
 # k3d
 printf "${GREEN}[K3D]${NC} - Install and create cluster...\n"
 if sudo k3d cluster list | grep -q 'kbarbry'
-	then
-		printf "${RED}[K3D]${NC} - A cluster named 'kbarbry' already exists.\n"
-		exit 1
+then
+	printf "${RED}[K3D]${NC} - A cluster named 'kbarbry' already exists.\n"
+	exit 1
 else
 	sudo wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-	sudo k3d cluster create kbarbry
+	sudo k3d cluster create kbarbry --port 8080:80@loadbalancer
 fi
 
 # argocd
 printf "${GREEN}[ARGOCD]${NC} - Install and launch app...\n"
 sudo kubectl create namespace argocd
-sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+if [ -d "../confs" && -f "../confs/ressource.yaml" ]; then
+	sudo kubectl apply -n argocd -f ../confs/ressource.yaml > /dev/null
+else
+	printf "${RED}[ARGOCD]${NC} - ../confs/ressource.yaml not found, but necessary.\n"
+	exit 1
+fi
 
 # wait argocd pods running
 printf "${GREEN}[ARGOCD]${NC} - Waiting for all pods to be running...\n"
@@ -67,10 +72,37 @@ while true; do
 	else
 		printf "${YELLOW}[ARGOCD]${NC} - Waiting... ($running_pods/7).\n"
 		sleep 3
-fi
+	fi
 done
 
-# get password
+# network settings
+if [ -d "../confs" && -f "../confs/ingress.yaml" ]; then
+	sudo kubectl apply -n argocd -f ../confs/ingress.yaml
+else
+	printf "${RED}[ARGOCD]${NC} - ../confs/ingress.yaml not found, but necessary.\n"
+	exit 1
+fi
+
+# argocd cli
+printf "${GREEN}[ARGOCD-CLI]${NC} - Install and launch CLI...\n"
+sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64 > /dev/null
+sudo chmod +x /usr/local/bin/argocd
+
+# retrieving password
+password=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+
+printf "${GREEN}[ARGOCD]${NC} - Login with admin account...\n"
+server=$(sudo kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo "$server"
+argocd login $server --username admin --password $password --insecure > /dev/null
+
+# dev app
+printf "${GREEN}[DEV]${NC} - Install and create app...\n"
+kubectl create namespace dev
+
+# print informations
 printf "${GREEN}[ARGOCD]${NC} - Retrieving credentials...\n"
 password=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+
+echo "argocd available at: http://localhost:8080/argocd"
 echo "login: admin, password: $password"
