@@ -64,7 +64,7 @@ if sudo k3d cluster list | grep -q 'kbarbry'; then
 	exit 1
 else
 	sudo wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-	sudo k3d cluster create kbarbry --port 8443:443@loadbalancer --port 8080:80@loadbalancer --servers 1 --agents 3
+	sudo k3d cluster create kbarbry --port 8080:80@loadbalancer --port 8888:8888@loadbalancer --port 80:80@loadbalancer --servers 1 --agents 3
 fi
 
 # argocd
@@ -123,7 +123,7 @@ password=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o json
 
 printf "${GREEN}[ARGOCD]${NC} - Login with admin account...\n"
 server=$(sudo kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-argocd login $server --username admin --password $password --insecure
+argocd login $server --username admin --password $password --insecure > /dev/null
 
 # dev app
 printf "${GREEN}[DEV]${NC} - Install and launch app...\n"
