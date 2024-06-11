@@ -24,13 +24,16 @@ to delete everything the Vagrantfile did.
 vagrant ssh <machineName>
 ```
 
-to coonnect with ssh to a machine.
+to connect with ssh to a machine.
 
 ```
 vagrant status
 ```
 
 to see a list of the actually running machines.
+
+IMPORTANT, for part 3 no vagrant files are allowed so you need to execute the server.sh being in the scripts folder or it won't work.
+It is meant to work on recents versions of Ubuntu and nothing else since no VM is used here. 
 
 ## Quick explainations
 
@@ -54,6 +57,20 @@ We need to make 3 web app on this server, to make an app we need yaml files, a D
 - ConfigMap, this one is a little dofferent, it is not a seperate file, but more a configuration shared by the deployment and the script to map the right html file for the right app, allowing us to host multiple web app, on a single IP address.
 
 Finally we have to apply each deployment and services files, along with the ingress, to lanch the 3 web-app, and everything is now working.
+
+### P3
+
+This part was a little more time consuming. We first have to install every component that could not be installed in the machine to be sure everything work as expected, here we need docker, kubectl, k3d and argocd. The script is long but I'm gonna try to explain how it works:
+
+- First some checks to see if we have sudo priviledges and if we are in the right folder to execute the code (we use relative paths so it's necessary).
+- Install docker, kubectl and the tools that we need in general.
+- Install k3d and create a cluster with all ports that we need, 1 server and 3 agents (check part one if you don't get that, agent = worker).
+- Install argocd, apply the ingress for networking and check that everything is up and running.
+- Install argocd-cli in order to login, inside argocd, check that everything works well.
+- Then create the app we want to host, with our github repo, that is linked to a docker image, the wil one in my case.
+- Finally printing all the informations for the user in order to test is everything is wokring correctly.
+
+The script is long cause it makes a lot of checks but that is pretty much it, we now have an argocd running, and a dev app launched and that will auto update itself when anything is changed in the manifests folder of the github repo. 
 
 ## Important doc
 

@@ -17,7 +17,3 @@ spec:
             name: argocd-server
             port:
               number: 80
-  # tls:
-  # - hosts:
-  #   - localhost
-  #   secretName: argocd-server-tls
