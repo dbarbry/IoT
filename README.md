@@ -1,4 +1,14 @@
-# Inception of Things (IoT)
+<p aligne="center">
+    <img src="images/header.png" alt="IoT">
+</p>
+
+<h1 align="center">
+    IoT
+</h1>
+
+<p align="center">
+	<b><i>Project to learn the basics of kubernetes and application deployment.</i></b><br>
+</p>
 
 ## Important commands
 
@@ -32,7 +42,7 @@ vagrant status
 
 to see a list of the actually running machines.
 
-IMPORTANT, for part 3 no vagrant files are allowed so you need to execute the server.sh being in the scripts folder or it won't work.
+IMPORTANT, for part 3 no vagrant files are allowed so you need to execute the server.sh with makefile doing "make".
 It is meant to work on recents versions of Ubuntu and nothing else since no VM is used here. 
 
 ## Quick explainations
